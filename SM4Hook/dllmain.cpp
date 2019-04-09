@@ -1,8 +1,8 @@
 ﻿// dllmain.cpp : 定义 DLL 应用程序的入口点。
 #include "stdafx.h"
 
-#define VERSION "0.1.0"
-#define TARGETVERSION "4.2.1"
+#define VERSION "0.1.1"
+#define TARGETVERSION "4.2.3"
 
 #ifdef _WIN64
 typedef unsigned long long ADDR_LEN;
@@ -27,16 +27,13 @@ void Sys_RunInit()
 {
 	ADDR_LEN hModule = (ADDR_LEN)GetModuleHandle(NULL);
 #ifndef _WIN64
-	if (*(WORD*)(hModule + 0x1000) == 0x5068) //SM4.2.1 !
+	if (*(DWORD*)(hModule + 0x742D8) == 0x8514C483) //SM4.2.3 !
 	{
-		*(BYTE*)(hModule + 0x741AF) = 0x75;
+		*(BYTE*)(hModule + 0x742DD) = 0x75;
 		if (_access("_edu_", 0) != -1)
-			*(BYTE*)(hModule + 0x741EB) = 0x75;
+			*(BYTE*)(hModule + 0x74319) = 0x75;
 		else
-			*(BYTE*)(hModule + 0x741C4) = 0x75;
-
-		*(ADDR_LEN*)(hModule + 0x79CF6) = (ADDR_LEN)L"ShaderMap™ - SM4Hook " VERSION " Installed";
-		*(ADDR_LEN*)(hModule + 0x74639) = (ADDR_LEN)L"SM4HOOK LICENSE";
+			*(BYTE*)(hModule + 0x742F2) = 0x75;
 	}
 	else
 	{
@@ -44,16 +41,16 @@ void Sys_RunInit()
 		ExitProcess(-1);
 	}
 #else
-	if (*(WORD*)(hModule + 0x1000) == 0x8D48) //SM4.2.1 x64!
+	if (*(DWORD*)(hModule + 0x87124) == 0x24448948) //SM4.2.3 x64!
 	{
 		const std::array<uint8_t, 1> jzToJnZ = { 0x75 };
 
-		WriteProtectedMemory((uintptr_t)(hModule + 0x86F56), jzToJnZ);
+		WriteProtectedMemory((uintptr_t)(hModule + 0x87146), jzToJnZ);
 
 		if (_access("_edu_", 0) != -1)
-			WriteProtectedMemory((uintptr_t)(hModule + 0x86F94), jzToJnZ);
+			WriteProtectedMemory((uintptr_t)(hModule + 0x87184), jzToJnZ);
 		else
-			WriteProtectedMemory((uintptr_t)(hModule + 0x86F6D), jzToJnZ);
+			WriteProtectedMemory((uintptr_t)(hModule + 0x8715D), jzToJnZ);
 	}
 	else
 	{
